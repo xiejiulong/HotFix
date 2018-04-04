@@ -1,0 +1,5 @@
+E:\GitHub\ILRuntimeDemo\Assets\StreamingAssets\HotFix_Project.dll
+E:\GitHub\ILRuntimeDemo\Assets\StreamingAssets\HotFix_Project.pdb
+E:\GitHub\HotFix_Project\obj\Release\HotFix_Project.dll
+E:\GitHub\HotFix_Project\obj\Release\HotFix_Project.pdb
+E:\GitHub\HotFix_Project\obj\Release\HotFix_Project.csprojResolveAssemblyReference.cache

@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 3918835265
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: loginpanel
+      Dependencies: {}
+    Info_1:
+      Name: sanrendoupanel
+      Dependencies: {}
+    Info_2:
+      Name: yanchengmajiangpanel
+      Dependencies: {}
