@@ -68,6 +68,7 @@
     <Compile Include="demo\TestInheritance.cs" />
     <Compile Include="demo\TestDelegate.cs" />
     <Compile Include="demo\InstanceClass.cs" />
+    <Compile Include="Global\OtherData_hotfix.cs" />
     <Compile Include="Hall\Game\YanChengMaJiangLogic_hotfix.cs" />
     <Compile Include="Hall\UI\Login\Login_hotfix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

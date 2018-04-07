@@ -15,10 +15,10 @@ namespace Hall
         public static Vector2 s_screenSize;
 
         // web测试服
-        static string s_webStorageUrl_test = "http://192.168.0.101/HotFix/";
+        static string s_webStorageUrl_test = "http://192.168.1.100:8080/HotFix/";
 
         // web正式服
-        static string s_webStorageUrl = "http://192.168.0.101/HotFix/";
+        static string s_webStorageUrl = "http://192.168.1.100:8080/HotFix/";
 
         public static string getWebUrl()
         {

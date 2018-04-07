@@ -25,11 +25,11 @@ public class ResHotFix : MonoBehaviour
 {
     private int m_localResVersion = 1;
 
-    private const string PathOfResVersion = "http://192.168.0.101/HotFix/hotfix/assetbundle/resversion.txt";
+    private const string PathOfResVersion = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/resversion.txt";
 
-    private const string PathOfLoginPanel      = "http://192.168.0.101/HotFix/hotfix/assetbundle/Android/loginpanel";
-    private const string PathOfYanCHengMaJiang = "http://192.168.0.101/HotFix/hotfix/assetbundle/Android/yanchengmajiangpanel";
-    private const string PathOfSanRenDou       = "http://192.168.0.101/HotFix/hotfix/assetbundle/Android/sanrendoupanel";
+    private const string PathOfLoginPanel      = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/Android/loginpanel";
+    private const string PathOfYanCHengMaJiang = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/Android/yanchengmajiangpanel";
+    private const string PathOfSanRenDou       = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/Android/sanrendoupanel";
 
     private AssetBundle myLoadedAssetBundleForLoginPanel;
     private AssetBundle myLoadedAssetBundleForSanRenDou;

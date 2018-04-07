@@ -16,6 +16,11 @@ namespace HotFix_Project
         /// </summary>
         private static void init()
         {
+            // 全局变量热更
+            {
+                s_funcList.Add("OtherData_hotfix.getWebUrl");
+            }
+
             // 登录
             {
                 // Login_hotfix
