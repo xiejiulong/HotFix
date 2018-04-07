@@ -41,6 +41,11 @@ public class ResHotFix : MonoBehaviour
     private GameObject SanRenDouPanel = null;
     private GameObject YanChengMaJiang = null;
 
+    public int GetLocalResVersion()
+    {
+        return m_localResVersion;
+    }
+
     private string GetPathOfResVersion()
     {
         return AssetBundlesPath + "resversion.txt";

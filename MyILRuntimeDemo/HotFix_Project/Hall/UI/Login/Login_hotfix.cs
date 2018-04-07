@@ -49,6 +49,18 @@ namespace HotFix_Project
                 login.m_ifUserName.text = "版本号是错的？：" + login.m_codeVersion.ToString();
 
                 //login.m_ifPWD.text = "唐浩吃屎";
+                if (OtherData.s_ResHotFix == null)
+                {
+                    login.m_ifPWD.text = "资源更新1";
+                }
+                else
+                {
+                    login.m_ifPWD.text = "资源更新2";
+
+                    ResHotFix rhf = OtherData.s_ResHotFix;
+                    Debug.LogError("资源版本号：" + rhf.GetLocalResVersion());
+                    login.m_ifPWD.text = rhf.GetLocalResVersion().ToString();
+                }
             }
         }
 

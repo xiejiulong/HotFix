@@ -35,6 +35,12 @@ namespace HotFix_Project
                 s_funcList.Add("YanChengMaJiangLogic_hotfix.Start");
                 s_funcList.Add("YanChengMaJiangLogic_hotfix.Update");
             }
+
+            // 三人斗
+            {
+                s_funcList.Add("SanRenDouLogic_hotfix.Start");
+                s_funcList.Add("SanRenDouLogic_hotfix.Update");
+            }
         }
 
         /// <summary>
