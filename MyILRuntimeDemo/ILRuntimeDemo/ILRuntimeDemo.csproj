@@ -365,6 +365,16 @@
     <Compile Include="Assets\Scripts\Hall\Login\Login.cs" />
     <Compile Include="Assets\Scripts\Hall\ResHotFix.cs" />
     <Compile Include="Assets\Scripts\Hall\YanChengMaJiangLogic.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpAssetBundleLoad.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpAssetDefine.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpAssetLoad.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpAssets.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpAssetsStore.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpDefineAB.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpDefineEntity.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpInstantiate.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\CarpResourcesLoad.cs" />
+    <Compile Include="Assets\Scripts\Utils\ABUtils\FileUtil.cs" />
     <Compile Include="Assets\Scripts\Utils\ILRuntimeUtil.cs" />
   </ItemGroup>
   <ItemGroup>
