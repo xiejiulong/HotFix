@@ -1,0 +1,40 @@
+ManifestFileVersion: 0
+CRC: 3219877697
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 65725cc5442a4c229c89e9d2ef1e5274
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 27d828f5996371cd4b6faf5e6d459387
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0f5a0edd69afe264b9e8e07a783550d2, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/Prefabs/hall/XueLiuChengHePanel.prefab
+Dependencies: []

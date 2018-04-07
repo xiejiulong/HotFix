@@ -20,6 +20,8 @@ namespace HotFix_Project
             Login login = OtherData.s_login;
             login.transform.Find("GoToGame_SAN_REN_DOU").GetComponent<Button>().onClick.AddListener(OnGoTo_SAN_REN_DOU);
             login.transform.Find("GoToGame_YAN_CHENG_MA_JIANG").GetComponent<Button>().onClick.AddListener(OnGoto_YAN_CHENG_MA_JIANG);
+            login.transform.Find("GoToGame_XUE_LIU_CHENG_HE").GetComponent<Button>().onClick.AddListener(OnGoTo_XueLiuChengHe);
+
         }
 
         public static void OnGoTo_SAN_REN_DOU()
@@ -30,6 +32,11 @@ namespace HotFix_Project
         public static void OnGoto_YAN_CHENG_MA_JIANG()
         {
             OtherData.s_ResHotFix.LoadYanCHengMaJiangPanel();
+        }
+
+        public static void OnGoTo_XueLiuChengHe()
+        {
+            OtherData.s_ResHotFix.LoadXueLiuChengHePanel();
         }
 
         public static void Update()

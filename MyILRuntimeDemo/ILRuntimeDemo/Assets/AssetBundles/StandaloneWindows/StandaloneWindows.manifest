@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3326589449
+CRC: 650159187
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -10,4 +10,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_2:
       Name: sanrendoupanel
+      Dependencies: {}
+    Info_3:
+      Name: xueliuchenghepanel
       Dependencies: {}

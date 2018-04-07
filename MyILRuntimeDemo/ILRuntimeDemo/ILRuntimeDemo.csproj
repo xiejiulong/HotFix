@@ -365,6 +365,7 @@
     <Compile Include="Assets\Scripts\Hall\Login\Login.cs" />
     <Compile Include="Assets\Scripts\Hall\ResHotFix.cs" />
     <Compile Include="Assets\Scripts\Hall\SanRenDouLogic.cs" />
+    <Compile Include="Assets\Scripts\Hall\XueLiuChengHeLogic.cs" />
     <Compile Include="Assets\Scripts\Hall\YanChengMaJiangLogic.cs" />
     <Compile Include="Assets\Scripts\Utils\ABUtils\CarpAssetBundleLoad.cs" />
     <Compile Include="Assets\Scripts\Utils\ABUtils\CarpAssetDefine.cs" />

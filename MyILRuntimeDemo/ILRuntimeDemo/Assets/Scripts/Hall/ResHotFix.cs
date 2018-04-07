@@ -36,10 +36,12 @@ public class ResHotFix : MonoBehaviour
     private AssetBundle myLoadedAssetBundleForLoginPanel;
     private AssetBundle myLoadedAssetBundleForSanRenDou;
     private AssetBundle myLoadedAssetBundleForYanCHengMaJiang;
+    private AssetBundle myLoadedAssetBundleForXueLiuChengHe;
 
     private GameObject LoginPanel = null;
     private GameObject SanRenDouPanel = null;
     private GameObject YanChengMaJiang = null;
+    private GameObject XueLiuChengHePanel = null;
 
     public int GetLocalResVersion()
     {
@@ -63,10 +65,16 @@ public class ResHotFix : MonoBehaviour
         return AssetBundlesPath + strPlatformName + "/yanchengmajiangpanel";
     }
 
-    private string GetPathOfSanRenDou()
+    private string GetPathOfSanRenDouPanel()
     {
         string strPlatformName = GetPlatFormName();
         return AssetBundlesPath + strPlatformName + "/sanrendoupanel";
+    }
+
+    private string GetPathOfXueLiuChengHePanel()
+    {
+        string strPlatformName = GetPlatFormName();
+        return AssetBundlesPath + strPlatformName + "/xueliuchenghepanel";
     }
 
     private string GetPlatFormName()
@@ -165,6 +173,11 @@ public class ResHotFix : MonoBehaviour
         StartCoroutine(LoadGameYanChengMaJiang());
     }
 
+    public void LoadXueLiuChengHePanel()
+    {
+        StartCoroutine(LoadGameXueLiuChengHe());
+    }
+
     IEnumerator LoadGameYanChengMaJiang()
     {
         if (null == myLoadedAssetBundleForYanCHengMaJiang)
@@ -202,7 +215,7 @@ public class ResHotFix : MonoBehaviour
         if (null == myLoadedAssetBundleForSanRenDou)
         {
             yield return null;
-            var www = WWW.LoadFromCacheOrDownload(GetPathOfSanRenDou(), m_localResVersion);
+            var www = WWW.LoadFromCacheOrDownload(GetPathOfSanRenDouPanel(), m_localResVersion);
             yield return www;
             if (!string.IsNullOrEmpty(www.error))
             {
@@ -224,6 +237,37 @@ public class ResHotFix : MonoBehaviour
                 () =>
                 {
                     Destroy(SanRenDouPanel.gameObject);
+                });
+        }
+    }
+
+    IEnumerator LoadGameXueLiuChengHe()
+    {
+        if (null == myLoadedAssetBundleForXueLiuChengHe)
+        {
+            yield return null;
+            var www = WWW.LoadFromCacheOrDownload(GetPathOfXueLiuChengHePanel(), m_localResVersion);
+            yield return www;
+            if (!string.IsNullOrEmpty(www.error))
+            {
+                Debug.Log(www.error);
+                yield break;
+            }
+
+            myLoadedAssetBundleForXueLiuChengHe = www.assetBundle;
+        }
+
+        GameObject prefab = myLoadedAssetBundleForXueLiuChengHe.LoadAsset<GameObject>("xueliuchenghepanel");
+        if (prefab)
+        {
+            XueLiuChengHePanel = Instantiate(prefab, this.transform);
+            yield return new WaitForEndOfFrame();
+
+            // 测试退出按钮
+            XueLiuChengHePanel.transform.Find("Exit").GetComponent<Button>().onClick.AddListener(
+                () =>
+                {
+                    Destroy(XueLiuChengHePanel.gameObject);
                 });
         }
     }
