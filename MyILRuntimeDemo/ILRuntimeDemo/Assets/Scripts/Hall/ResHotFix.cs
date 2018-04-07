@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Hall;
+using ILRuntime.Runtime.Debugger.Protocol;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,11 +26,12 @@ public class ResHotFix : MonoBehaviour
 {
     private int m_localResVersion = 1;
 
-    private const string PathOfResVersion = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/resversion.txt";
+    private const string AssetBundlesPath = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/";
+    private const string PathOfResVersion = AssetBundlesPath+"resversion.txt";
 
-    private const string PathOfLoginPanel      = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/Android/loginpanel";
-    private const string PathOfYanCHengMaJiang = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/Android/yanchengmajiangpanel";
-    private const string PathOfSanRenDou       = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/Android/sanrendoupanel";
+    private const string PathOfLoginPanel      = AssetBundlesPath+"Android/loginpanel";
+    private const string PathOfYanCHengMaJiang = AssetBundlesPath+"Android/yanchengmajiangpanel";
+    private const string PathOfSanRenDou       = AssetBundlesPath+"Android/sanrendoupanel";
 
     private AssetBundle myLoadedAssetBundleForLoginPanel;
     private AssetBundle myLoadedAssetBundleForSanRenDou;
@@ -38,6 +40,46 @@ public class ResHotFix : MonoBehaviour
     private GameObject LoginPanel = null;
     private GameObject SanRenDouPanel = null;
     private GameObject YanChengMaJiang = null;
+
+    private string GetPathOfResVersion()
+    {
+        return AssetBundlesPath + "resversion.txt";
+    }
+
+    private string GetPathOfLoginPanel()
+    {
+        string strPlatformName = GetPlatFormName();
+        return AssetBundlesPath + strPlatformName + "/loginpanel";
+    }
+
+    private string GetPathOfYanChengMaJiangPanel()
+    {
+        string strPlatformName = GetPlatFormName();
+        return AssetBundlesPath + strPlatformName + "/yanchengmajiangpanel";
+    }
+
+    private string GetPathOfSanRenDou()
+    {
+        string strPlatformName = GetPlatFormName();
+        return AssetBundlesPath + strPlatformName + "/sanrendoupanel";
+    }
+
+    private string GetPlatFormName()
+    {
+        switch (Application.platform)
+        {
+            case RuntimePlatform.Android:
+                return "Android";
+            case RuntimePlatform.IPhonePlayer:
+                return "iOS";
+            case RuntimePlatform.WindowsPlayer:
+            case RuntimePlatform.WindowsEditor:
+                return "StandaloneWindows";
+            default:
+                Debug.LogError("GetPlatFormName Error");
+                return "unknow plat form";
+        }
+    }
 
     private void Awake()
     {
@@ -53,12 +95,12 @@ public class ResHotFix : MonoBehaviour
     {
         while (!Caching.ready)
             yield return null;
-        Debug.Log("检查资源更新...");
+        Debug.Log("开始。。。检查资源更新...");
 
         yield return StartCoroutine(CheckVersion());
 
-        Debug.Log("加载新资源...");
-        var www = WWW.LoadFromCacheOrDownload(PathOfLoginPanel, m_localResVersion);
+        Debug.Log("加载新资源..." + m_localResVersion);
+        var www = WWW.LoadFromCacheOrDownload(GetPathOfLoginPanel(), m_localResVersion);
         yield return www;
         if (!string.IsNullOrEmpty(www.error))
         {
@@ -75,6 +117,12 @@ public class ResHotFix : MonoBehaviour
             Debug.Log("生成登录面板...");
             LoginPanel = Instantiate(prefab, this.transform);
             Debug.Log("生成登录面板...完毕");
+
+            while (!OtherData.IsDllLoadOver)
+            {
+                yield return null;
+            }
+            Debug.Log("Dll load over......");
             yield return new WaitForEndOfFrame();
         }
     }
@@ -82,7 +130,7 @@ public class ResHotFix : MonoBehaviour
     IEnumerator CheckVersion()
     {
         yield return null;
-        WWW wwwVersion = new WWW(PathOfResVersion);
+        WWW wwwVersion = new WWW(GetPathOfResVersion());
         while (!wwwVersion.isDone)
         {
             yield return null;
@@ -117,7 +165,7 @@ public class ResHotFix : MonoBehaviour
         if (null == myLoadedAssetBundleForYanCHengMaJiang)
         {
             yield return null;
-            var www = WWW.LoadFromCacheOrDownload(PathOfYanCHengMaJiang, m_localResVersion);
+            var www = WWW.LoadFromCacheOrDownload(GetPathOfYanChengMaJiangPanel(), m_localResVersion);
             yield return www;
             if (!string.IsNullOrEmpty(www.error))
             {
@@ -149,7 +197,7 @@ public class ResHotFix : MonoBehaviour
         if (null == myLoadedAssetBundleForSanRenDou)
         {
             yield return null;
-            var www = WWW.LoadFromCacheOrDownload(PathOfSanRenDou, m_localResVersion);
+            var www = WWW.LoadFromCacheOrDownload(GetPathOfSanRenDou(), m_localResVersion);
             yield return www;
             if (!string.IsNullOrEmpty(www.error))
             {

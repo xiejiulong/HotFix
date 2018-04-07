@@ -1,7 +1,13 @@
 ManifestFileVersion: 0
-CRC: 3790880832
+CRC: 1278030830
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
+      Name: yanchengmajiangpanel
+      Dependencies: {}
+    Info_1:
+      Name: loginpanel
+      Dependencies: {}
+    Info_2:
       Name: sanrendoupanel
       Dependencies: {}

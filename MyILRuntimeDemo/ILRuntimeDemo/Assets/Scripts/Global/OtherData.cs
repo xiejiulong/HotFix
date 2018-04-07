@@ -11,6 +11,7 @@ namespace Hall
         public static Login s_login = null;
         public static ResHotFix s_ResHotFix = null;
         public static YanChengMaJiangLogic s_YanChengMaJiangLogic = null;
+        public static bool IsDllLoadOver = false;
 
         public static Vector2 s_screenSize;
 

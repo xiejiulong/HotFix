@@ -43,8 +43,6 @@ public class Login : MonoBehaviour
     public InputField m_ifPWD;
     public Button m_btnHotFixTest;
 
-    private bool IsDllGetOver = false;
-
     // 代码版本
     public int m_codeVersion = 1;
 
@@ -60,7 +58,10 @@ public class Login : MonoBehaviour
 
         yield return StartCoroutine("CheckVersion");
 
-        Debug.LogError("Start 123");
+        while (!OtherData.IsDllLoadOver)
+            yield return null;
+
+        Debug.Log("Start 123");
 
         // 优先使用热更新的代码
         if (ILRuntimeUtil.getInstance().checkDllClassHasFunc("Login_hotfix", "Start"))
@@ -165,7 +166,7 @@ public class Login : MonoBehaviour
 
     public void onDllGetOver()
     {
-        IsDllGetOver = true;
+        OtherData.IsDllLoadOver = true;
 
         // 优先使用热更新的代码
         if (ILRuntimeUtil.getInstance().checkDllClassHasFunc("Login_hotfix", "onDllGetOver"))

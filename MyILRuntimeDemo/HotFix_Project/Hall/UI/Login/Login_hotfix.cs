@@ -15,13 +15,19 @@ namespace HotFix_Project
         private static bool bTween = false;
         public static void Start()
         {
-            UnityEngine.Debug.LogError("Hi，进入Start HotFix1111111111111111111...");
+            UnityEngine.Debug.LogError("Hi，进入Start HotFix...Start");
 
             Login login = OtherData.s_login;
-            login.transform.Find("GoToGame").GetComponent<Button>().onClick.AddListener(OnGoToGameBtnClick);
+            login.transform.Find("GoToGame_SAN_REN_DOU").GetComponent<Button>().onClick.AddListener(OnGoTo_SAN_REN_DOU);
+            login.transform.Find("GoToGame_YAN_CHENG_MA_JIANG").GetComponent<Button>().onClick.AddListener(OnGoto_YAN_CHENG_MA_JIANG);
         }
 
-        public static void OnGoToGameBtnClick()
+        public static void OnGoTo_SAN_REN_DOU()
+        {
+            OtherData.s_ResHotFix.LoadSanRenDouPanel();
+        }
+
+        public static void OnGoto_YAN_CHENG_MA_JIANG()
         {
             OtherData.s_ResHotFix.LoadYanCHengMaJiangPanel();
         }
@@ -42,7 +48,7 @@ namespace HotFix_Project
 
                 login.m_ifUserName.text = "版本号是错的？：" + login.m_codeVersion.ToString();
 
-                login.m_ifPWD.text = "唐浩吃屎";
+                //login.m_ifPWD.text = "唐浩吃屎";
             }
         }
 
