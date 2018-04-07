@@ -15,6 +15,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Hall;
 using ILRuntime.Runtime.Debugger.Protocol;
@@ -241,8 +242,79 @@ public class ResHotFix : MonoBehaviour
         }
     }
 
+    public bool InstallAPK(string path)
+    {
+        Debug.LogError("开始安装");
+        try
+        {
+            var Intent = new AndroidJavaClass("android.content.Intent");
+            var ACTION_VIEW = Intent.GetStatic<string>("ACTION_VIEW");
+            var FLAG_ACTIVITY_NEW_TASK = Intent.GetStatic<int>("FLAG_ACTIVITY_NEW_TASK");
+            var intent = new AndroidJavaObject("android.content.Intent", ACTION_VIEW);
+
+            var file = new AndroidJavaObject("java.io.File", path);
+            var Uri = new AndroidJavaClass("android.net.Uri");
+            var uri = Uri.CallStatic<AndroidJavaObject>("fromFile", file);
+
+            intent.Call<AndroidJavaObject>("setDataAndType", uri, "application/vnd.android.package-archive");
+            intent.Call<AndroidJavaObject>("addFlags", FLAG_ACTIVITY_NEW_TASK);
+            intent.Call<AndroidJavaObject>("setClassName", "com.android.packageinstaller", "com.android.packageinstaller.PackageInstallerActivity");
+
+            var UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            var currentActivity = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            currentActivity.Call("startActivity", intent);
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError(e.ToString());
+            return false;
+        }
+    }
+
     IEnumerator LoadGameXueLiuChengHe()
     {
+        yield return null;
+
+        string apkPath = "http://192.168.1.100:8080/HotFix/hotfix/2.apk";
+        WWW www = new WWW(apkPath);
+        while (!www.isDone)
+        {
+            yield return null;
+        }
+
+        if (!string.IsNullOrEmpty(www.error))
+        {
+            Debug.Log(www.error);
+            yield break;
+        }
+
+        byte[] dll = www.bytes;
+        string fileInfoPath;
+
+        if (Application.isMobilePlatform)
+            fileInfoPath = Application.persistentDataPath + "/2.apk";
+        else
+            fileInfoPath = Application.streamingAssetsPath + "/2.apk";
+        using (System.IO.MemoryStream ms = new MemoryStream(dll))
+        {
+            using (FileStream fs = new FileStream(fileInfoPath, FileMode.Create))
+            {
+                fs.Write(dll, 0, dll.Length);
+                fs.Flush();
+                fs.Close();
+            }
+        }
+
+        
+        Debug.LogError("下载完毕"+fileInfoPath);
+        
+        while (!InstallAPK(fileInfoPath))
+        {
+            yield return null;
+        }
+
+        /*
         if (null == myLoadedAssetBundleForXueLiuChengHe)
         {
             yield return null;
@@ -269,6 +341,6 @@ public class ResHotFix : MonoBehaviour
                 {
                     Destroy(XueLiuChengHePanel.gameObject);
                 });
-        }
+        }*/
     }
 }
