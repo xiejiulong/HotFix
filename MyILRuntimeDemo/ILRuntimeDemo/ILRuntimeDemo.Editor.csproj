@@ -185,6 +185,8 @@
     <None Include="Assets\DOTween\DOTween50.xml" />
     <None Include="Assets\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\DOTween\readme.txt" />
+    <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+    <None Include="Assets\Plugins\Android\res\xml\provider_paths.xml" />
     <None Include="Assets\link.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

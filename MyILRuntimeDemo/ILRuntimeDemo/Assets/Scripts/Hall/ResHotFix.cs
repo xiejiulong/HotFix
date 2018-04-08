@@ -13,13 +13,12 @@
  * Description      :
  *************************************************************************************/
 
+using Hall;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Hall;
-using ILRuntime.Runtime.Debugger.Protocol;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,11 +27,11 @@ public class ResHotFix : MonoBehaviour
     private int m_localResVersion = 1;
 
     private const string AssetBundlesPath = "http://192.168.1.100:8080/HotFix/hotfix/assetbundle/";
-    private const string PathOfResVersion = AssetBundlesPath+"resversion.txt";
+    private const string PathOfResVersion = AssetBundlesPath + "resversion.txt";
 
-    private const string PathOfLoginPanel      = AssetBundlesPath+"Android/loginpanel";
-    private const string PathOfYanCHengMaJiang = AssetBundlesPath+"Android/yanchengmajiangpanel";
-    private const string PathOfSanRenDou       = AssetBundlesPath+"Android/sanrendoupanel";
+    private const string PathOfLoginPanel = AssetBundlesPath + "Android/loginpanel";
+    private const string PathOfYanCHengMaJiang = AssetBundlesPath + "Android/yanchengmajiangpanel";
+    private const string PathOfSanRenDou = AssetBundlesPath + "Android/sanrendoupanel";
 
     private AssetBundle myLoadedAssetBundleForLoginPanel;
     private AssetBundle myLoadedAssetBundleForSanRenDou;
@@ -84,11 +83,14 @@ public class ResHotFix : MonoBehaviour
         {
             case RuntimePlatform.Android:
                 return "Android";
+
             case RuntimePlatform.IPhonePlayer:
                 return "iOS";
+
             case RuntimePlatform.WindowsPlayer:
             case RuntimePlatform.WindowsEditor:
                 return "StandaloneWindows";
+
             default:
                 Debug.LogError("GetPlatFormName Error");
                 return "unknow plat form";
@@ -105,7 +107,7 @@ public class ResHotFix : MonoBehaviour
         OtherData.s_ResHotFix = null;
     }
 
-    IEnumerator Start()
+    private IEnumerator Start()
     {
         while (!Caching.ready)
             yield return null;
@@ -141,7 +143,7 @@ public class ResHotFix : MonoBehaviour
         }
     }
 
-    IEnumerator CheckVersion()
+    private IEnumerator CheckVersion()
     {
         yield return null;
         WWW wwwVersion = new WWW(GetPathOfResVersion());
@@ -179,7 +181,7 @@ public class ResHotFix : MonoBehaviour
         StartCoroutine(LoadGameXueLiuChengHe());
     }
 
-    IEnumerator LoadGameYanChengMaJiang()
+    private IEnumerator LoadGameYanChengMaJiang()
     {
         if (null == myLoadedAssetBundleForYanCHengMaJiang)
         {
@@ -194,7 +196,6 @@ public class ResHotFix : MonoBehaviour
 
             myLoadedAssetBundleForYanCHengMaJiang = www.assetBundle;
         }
-
 
         GameObject prefab = myLoadedAssetBundleForYanCHengMaJiang.LoadAsset<GameObject>("YanCHengMaJiangPanel");
         if (prefab)
@@ -211,7 +212,7 @@ public class ResHotFix : MonoBehaviour
         }
     }
 
-    IEnumerator LoadGameSanRenDou()
+    private IEnumerator LoadGameSanRenDou()
     {
         if (null == myLoadedAssetBundleForSanRenDou)
         {
@@ -272,47 +273,185 @@ public class ResHotFix : MonoBehaviour
         }
     }
 
-    IEnumerator LoadGameXueLiuChengHe()
+    private static int getSDKInt()
     {
-        yield return null;
-
-        string apkPath = "http://192.168.1.100:8080/HotFix/hotfix/2.apk";
-        WWW www = new WWW(apkPath);
-        while (!www.isDone)
+        using (var version = new AndroidJavaClass("android.os.Build$VERSION"))
         {
-            yield return null;
+            return version.GetStatic<int>("SDK_INT");
         }
+    }
 
-        if (!string.IsNullOrEmpty(www.error))
+    public bool installApp(string apkPath)
+    {
+        int sdkLevel = getSDKInt();
+        if (sdkLevel < 24)
         {
-            Debug.Log(www.error);
-            yield break;
-        }
-
-        byte[] dll = www.bytes;
-        string fileInfoPath;
-
-        if (Application.isMobilePlatform)
-            fileInfoPath = Application.persistentDataPath + "/2.apk";
-        else
-            fileInfoPath = Application.streamingAssetsPath + "/2.apk";
-        using (System.IO.MemoryStream ms = new MemoryStream(dll))
-        {
-            using (FileStream fs = new FileStream(fileInfoPath, FileMode.Create))
+            // below android api 24
+            try
             {
-                fs.Write(dll, 0, dll.Length);
-                fs.Flush();
-                fs.Close();
+                AndroidJavaClass intentObj = new AndroidJavaClass("android.content.Intent");
+                string ACTION_VIEW = intentObj.GetStatic<string>("ACTION_VIEW");
+                int FLAG_ACTIVITY_NEW_TASK = intentObj.GetStatic<int>("FLAG_ACTIVITY_NEW_TASK");
+                AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent", ACTION_VIEW);
+
+                AndroidJavaObject fileObj = new AndroidJavaObject("java.io.File", apkPath);
+                AndroidJavaClass uriObj = new AndroidJavaClass("android.net.Uri");
+                AndroidJavaObject uri = uriObj.CallStatic<AndroidJavaObject>("fromFile", fileObj);
+
+                intent.Call<AndroidJavaObject>("setDataAndType", uri, "application/vnd.android.package-archive");
+                intent.Call<AndroidJavaObject>("addFlags", FLAG_ACTIVITY_NEW_TASK);
+                intent.Call<AndroidJavaObject>("setClassName", "com.android.packageinstaller", "com.android.packageinstaller.PackageInstallerActivity");
+
+                AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                currentActivity.Call("startActivity", intent);
+
+                GameObject.Find("TextDebug").GetComponent<Text>().text = "Success";
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                GameObject.Find("TextDebug").GetComponent<Text>().text = "Error: " + e.Message;
+                return false;
             }
         }
-
-        
-        Debug.LogError("下载完毕"+fileInfoPath);
-        
-        while (!InstallAPK(fileInfoPath))
+        else
         {
+            // high android api 24
+            bool success = true;
+            GameObject.Find("TextDebug").GetComponent<Text>().text = "Installing App";
+
+            try
+            {
+                //Get Activity then Context
+                AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                AndroidJavaObject unityContext = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
+
+                //Get the package Name
+                string packageName = unityContext.Call<string>("getPackageName");
+                string authority = packageName + ".fileprovider";
+
+                AndroidJavaClass intentObj = new AndroidJavaClass("android.content.Intent");
+                string ACTION_VIEW = intentObj.GetStatic<string>("ACTION_VIEW");
+                AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent", ACTION_VIEW);
+
+                int FLAG_ACTIVITY_NEW_TASK = intentObj.GetStatic<int>("FLAG_ACTIVITY_NEW_TASK");
+                int FLAG_GRANT_READ_URI_PERMISSION = intentObj.GetStatic<int>("FLAG_GRANT_READ_URI_PERMISSION");
+
+                //File fileObj = new File(String pathname);
+                AndroidJavaObject fileObj = new AndroidJavaObject("java.io.File", apkPath);
+                //FileProvider object that will be used to call it static function
+                AndroidJavaClass fileProvider = new AndroidJavaClass("android.support.v4.content.FileProvider");
+                //getUriForFile(Context context, String authority, File file)
+                AndroidJavaObject uri = fileProvider.CallStatic<AndroidJavaObject>("getUriForFile", unityContext, authority, fileObj);
+
+                intent.Call<AndroidJavaObject>("setDataAndType", uri, "application/vnd.android.package-archive");
+                intent.Call<AndroidJavaObject>("addFlags", FLAG_ACTIVITY_NEW_TASK);
+                intent.Call<AndroidJavaObject>("addFlags", FLAG_GRANT_READ_URI_PERMISSION);
+                currentActivity.Call("startActivity", intent);
+
+                GameObject.Find("TextDebug").GetComponent<Text>().text = "Success";
+            }
+            catch (System.Exception e)
+            {
+                GameObject.Find("TextDebug").GetComponent<Text>().text = "Error: " + e.Message;
+                success = false;
+            }
+
+            return success;
+        }
+    }
+
+    private IEnumerator downLoadFromServer()
+    {
+        string url = "http://192.168.1.100:8080/HotFix/hotfix/2.apk";
+
+        string savePath = Path.Combine(Application.persistentDataPath, "data");
+        savePath = Path.Combine(savePath, "AntiOvr.apk");
+
+        Dictionary<string, string> header = new Dictionary<string, string>();
+        string userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+        header.Add("User-Agent", userAgent);
+        WWW www = new WWW(url, null, header);
+
+        while (!www.isDone)
+        {
+            //Must yield below/wait for a frame
+            GameObject.Find("TextDebug").GetComponent<Text>().text = "Stat: " + www.progress;
             yield return null;
         }
+
+        byte[] yourBytes = www.bytes;
+
+        GameObject.Find("TextDebug").GetComponent<Text>().text = "Done downloading. Size: " + yourBytes.Length;
+
+        //Create Directory if it does not exist
+        if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+            GameObject.Find("TextDebug").GetComponent<Text>().text = "Created Dir";
+        }
+
+        try
+        {
+            //Now Save it
+            System.IO.File.WriteAllBytes(savePath, yourBytes);
+            Debug.Log("Saved Data to: " + savePath.Replace("/", "\\"));
+            GameObject.Find("TextDebug").GetComponent<Text>().text = "Saved Data";
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Failed To Save Data to: " + savePath.Replace("/", "\\"));
+            Debug.LogWarning("Error: " + e.Message);
+            GameObject.Find("TextDebug").GetComponent<Text>().text = "Error Saving Data";
+        }
+
+        //Install APK
+        installApp(savePath);
+    }
+
+    private IEnumerator LoadGameXueLiuChengHe()
+    {
+        yield return null;
+        StartCoroutine(downLoadFromServer());
+
+        //string apkPath = "http://192.168.1.100:8080/HotFix/hotfix/2.apk";
+        //WWW www = new WWW(apkPath);
+        //while (!www.isDone)
+        //{
+        //    yield return null;
+        //}
+
+        //if (!string.IsNullOrEmpty(www.error))
+        //{
+        //    Debug.Log(www.error);
+        //    yield break;
+        //}
+
+        //byte[] dll = www.bytes;
+        //string fileInfoPath;
+
+        //if (Application.isMobilePlatform)
+        //    fileInfoPath = Application.persistentDataPath + "/2.apk";
+        //else
+        //    fileInfoPath = Application.streamingAssetsPath + "/2.apk";
+        //using (System.IO.MemoryStream ms = new MemoryStream(dll))
+        //{
+        //    using (FileStream fs = new FileStream(fileInfoPath, FileMode.Create))
+        //    {
+        //        fs.Write(dll, 0, dll.Length);
+        //        fs.Flush();
+        //        fs.Close();
+        //    }
+        //}
+
+        //Debug.LogError("下载完毕"+fileInfoPath);
+
+        //while (!InstallAPK(fileInfoPath))
+        //{
+        //    yield return null;
+        //}
 
         /*
         if (null == myLoadedAssetBundleForXueLiuChengHe)
