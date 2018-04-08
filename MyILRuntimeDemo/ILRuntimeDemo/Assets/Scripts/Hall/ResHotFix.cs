@@ -365,7 +365,7 @@ public class ResHotFix : MonoBehaviour
 
     private IEnumerator downLoadFromServer()
     {
-        string url = "http://192.168.1.100:8080/HotFix/hotfix/2.apk";
+        string url = OtherData.getWebUrl() + "hotfix/2.apk";
 
         string savePath = Path.Combine(Application.persistentDataPath, "data");
         savePath = Path.Combine(savePath, "AntiOvr.apk");

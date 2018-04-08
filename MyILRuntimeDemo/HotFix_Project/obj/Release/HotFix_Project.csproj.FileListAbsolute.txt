@@ -1,6 +1,5 @@
 E:\__Unit3D++\JavGame\HotFix\hotfix\HotFix_Project.dll
 E:\__Unit3D++\JavGame\HotFix\hotfix\HotFix_Project.pdb
-E:\__Unit3D++\JavGame\HotFix\MyILRuntimeDemo\HotFix_Project\obj\Release\HotFix_Project.csprojResolveAssemblyReference.cache
 E:\__Unit3D++\JavGame\HotFix\MyILRuntimeDemo\HotFix_Project\obj\Release\HotFix_Project.csproj.CoreCompileInputs.cache
 E:\__Unit3D++\JavGame\HotFix\MyILRuntimeDemo\HotFix_Project\obj\Release\HotFix_Project.dll
 E:\__Unit3D++\JavGame\HotFix\MyILRuntimeDemo\HotFix_Project\obj\Release\HotFix_Project.pdb
