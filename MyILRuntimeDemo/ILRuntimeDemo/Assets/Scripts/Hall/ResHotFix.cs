@@ -375,10 +375,11 @@ public class ResHotFix : MonoBehaviour
         header.Add("User-Agent", userAgent);
         WWW www = new WWW(url, null, header);
 
+        Text pText = GameObject.Find("TextDebug").GetComponent<Text>();
         while (!www.isDone)
         {
             //Must yield below/wait for a frame
-            GameObject.Find("TextDebug").GetComponent<Text>().text = "Stat: " + www.progress;
+            pText.text = "Stat: " + (www.progress*100).ToString("00.00");
             yield return null;
         }
 
@@ -390,7 +391,7 @@ public class ResHotFix : MonoBehaviour
         if (!Directory.Exists(Path.GetDirectoryName(savePath)))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-            GameObject.Find("TextDebug").GetComponent<Text>().text = "Created Dir";
+            pText.text = "Created Dir";
         }
 
         try
@@ -398,13 +399,13 @@ public class ResHotFix : MonoBehaviour
             //Now Save it
             System.IO.File.WriteAllBytes(savePath, yourBytes);
             Debug.Log("Saved Data to: " + savePath.Replace("/", "\\"));
-            GameObject.Find("TextDebug").GetComponent<Text>().text = "Saved Data";
+            pText.text = "Saved Data";
         }
         catch (Exception e)
         {
             Debug.LogWarning("Failed To Save Data to: " + savePath.Replace("/", "\\"));
             Debug.LogWarning("Error: " + e.Message);
-            GameObject.Find("TextDebug").GetComponent<Text>().text = "Error Saving Data";
+            pText.text = "Error Saving Data";
         }
 
         //Install APK
